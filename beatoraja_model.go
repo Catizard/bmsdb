@@ -2,7 +2,7 @@ package bmsdb
 
 type BeatorajaScoreLog struct {
 	Sha256    string
-	Mode      string
+	Mode      int32
 	Clear     int32
 	OldClear  int32 `gorm:"column:oldclear"`
 	Score     int32
@@ -56,7 +56,7 @@ func (BeatorajaSongData) TableName() string {
 
 type BeatorajaScoreDataLog struct {
 	Sha256     string
-	Mode       string
+	Mode       int32
 	Clear      int32
 	Epg        int32
 	Lpg        int32
@@ -73,38 +73,7 @@ type BeatorajaScoreDataLog struct {
 	Notes      int32
 	Combo      int32
 	Minbp      int32
-	PlayCount  int32 `gorm:"column:playcount"`
-	ClearCount int32 `gorm:"column:clearcount"`
-	Option     int32
-	Seed       int64
-	Random     int32
-	TimeStamp  int64 `gorm:"column:date"`
-	State      int32
-}
-
-func (BeatorajaScoreDataLog) TableName() string {
-	return "scoredatalog"
-}
-
-type BeatorajaScoreData struct {
-	Sha256     string
-	Mode       string
-	Clear      int32
-	Epg        int32
-	Lpg        int32
-	Egr        int32
-	Lgr        int32
-	Egd        int32
-	Lgd        int32
-	Ebd        int32
-	Lbd        int32
-	Epr        int32
-	Lpr        int32
-	Ems        int32
-	Lms        int32
-	Notes      int32
-	Combo      int32
-	Minbp      int32
+	AvgJudge   int64 `gorm:"column:avgjudge"`
 	PlayCount  int32 `gorm:"column:playcount"`
 	ClearCount int32 `gorm:"column:clearcount"`
 	Trophy     string
@@ -114,6 +83,43 @@ type BeatorajaScoreData struct {
 	Random     int32
 	TimeStamp  int64 `gorm:"column:date"`
 	State      int32
+	ScoreHash  string `gorm:"column:scorehash"`
+}
+
+func (BeatorajaScoreDataLog) TableName() string {
+	return "scoredatalog"
+}
+
+type BeatorajaScoreData struct {
+	Sha256     string
+	Mode       int32
+	Clear      int32
+	Epg        int32
+	Lpg        int32
+	Egr        int32
+	Lgr        int32
+	Egd        int32
+	Lgd        int32
+	Ebd        int32
+	Lbd        int32
+	Epr        int32
+	Lpr        int32
+	Ems        int32
+	Lms        int32
+	Notes      int32
+	Combo      int32
+	Minbp      int32
+	AvgJudge   int64 `gorm:"column:avgjudge"`
+	PlayCount  int32 `gorm:"column:playcount"`
+	ClearCount int32 `gorm:"column:clearcount"`
+	Trophy     string
+	Ghost      string
+	Option     int32
+	Seed       int64
+	Random     int32
+	TimeStamp  int64 `gorm:"column:date"`
+	State      int32
+	ScoreHash  string `gorm:"column:scorehash"`
 }
 
 func (BeatorajaScoreData) TableName() string {

@@ -2,6 +2,7 @@ package bmsdb
 
 import (
 	"os"
+	"strings"
 
 	"github.com/glebarez/sqlite"
 	"github.com/rotisserie/eris"
@@ -35,7 +36,12 @@ func isExistedDir(dir string) error {
 }
 
 func openDatabase(fp string) (*gorm.DB, error) {
-	dsn := fp + READONLY_PARAMETER
+	dsn := ""
+	if strings.ContainsAny(fp, "?") {
+		dsn = fp + "&" + READONLY_PARAMETER[1:]
+	} else {
+		dsn = fp + READONLY_PARAMETER
+	}
 	return gorm.Open(sqlite.Open(dsn))
 }
 
@@ -43,12 +49,15 @@ func validateQuery(query *QueryContext) error {
 	if query == nil {
 		return eris.Errorf("query cannot be nil")
 	}
+
 	if query.path == "" {
 		return eris.Errorf("query path cannot be empty")
 	}
 
-	if err := isExistedFile(query.path); err != nil {
-		return eris.Wrap(err, "query path is not a valid file")
+	if !strings.HasPrefix(query.path, ":memory:") && !strings.HasPrefix(query.path, "file::memory:") {
+		if err := isExistedFile(query.path); err != nil {
+			return eris.Wrap(err, "query path is not a valid file")
+		}
 	}
 
 	return nil
