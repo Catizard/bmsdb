@@ -167,10 +167,11 @@ func TestReadScoreSimple(t *testing.T) {
 		ScoreHash:  "0353657be2b8b81c09b1d50609628409075b02148d33799b54ff06900fffea3b596",
 	}
 
-	db, err := createEmptyScoreDB()
+	db, cleanup, err := createEmptyScoreDB()
 	if err != nil {
 		t.Error(err)
 	}
+	defer cleanup()
 
 	if err := db.Create(score).Error; err != nil {
 		t.Error(err)
@@ -208,10 +209,12 @@ func TestReadScoreLogSimple(t *testing.T) {
 		TimeStamp: 1713092975,
 	}
 
-	db, err := createEmptyScoreLogDB()
+	db, cleanup, err := createEmptyScoreLogDB()
 	if err != nil {
 		t.Error(err)
 	}
+
+	defer cleanup()
 
 	if err := db.Create(scoreLog).Error; err != nil {
 		t.Error(err)
@@ -266,10 +269,12 @@ func TestReadScoreDataLogSimple(t *testing.T) {
 		ScoreHash:  "035e55f63e7b2acaf95eddd865aa7445e32d0cae12c74508b10e731cc52dcb3eaed",
 	}
 
-	db, err := createEmptyScoreDataLogDB()
+	db, cleanup, err := createEmptyScoreDataLogDB()
 	if err != nil {
 		t.Error(err)
 	}
+
+	defer cleanup()
 
 	if err := db.Create(scoreDataLog).Error; err != nil {
 		t.Error(err)
@@ -324,10 +329,11 @@ func TestReadSongDataSimple(t *testing.T) {
 		ChartHash:  "1f8f4889fafe375ae8cee374cbe5b7f1ed094c031226fca8691e0d8ca90f0ec5",
 	}
 
-	db, err := createEmptySongDataDB()
+	db, cleanup, err := createEmptySongDataDB()
 	if err != nil {
 		t.Error(err)
 	}
+	defer cleanup()
 
 	if err := db.Create(songData).Error; err != nil {
 		t.Error(err)
@@ -361,54 +367,70 @@ func isExistedDir(dir string) error {
 	return nil
 }
 
-func createEmptyScoreDB() (*gorm.DB, error) {
+func createEmptyScoreDB() (*gorm.DB, func(), error) {
 	db, err := gorm.Open(sqlite.Open(MEMORY_DSN))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if err := db.AutoMigrate(bmsdb.BeatorajaScoreData{}); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return db, nil
+	return db, func() {
+		if err := db.Migrator().DropTable(bmsdb.BeatorajaScoreData{}); err != nil {
+			log.Printf("failed to clean up table: %s, tests could be wrong!", err)
+		}
+	}, nil
 }
 
-func createEmptyScoreLogDB() (*gorm.DB, error) {
+func createEmptyScoreLogDB() (*gorm.DB, func(), error) {
 	db, err := gorm.Open(sqlite.Open(MEMORY_DSN))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if err := db.AutoMigrate(bmsdb.BeatorajaScoreLog{}); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return db, nil
+	return db, func() {
+		if err := db.Migrator().DropTable(bmsdb.BeatorajaScoreLog{}); err != nil {
+			log.Printf("failed to clean up table: %s, tests could be wrong!", err)
+		}
+	}, nil
 }
 
-func createEmptyScoreDataLogDB() (*gorm.DB, error) {
+func createEmptyScoreDataLogDB() (*gorm.DB, func(), error) {
 	db, err := gorm.Open(sqlite.Open(MEMORY_DSN))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if err := db.AutoMigrate(bmsdb.BeatorajaScoreDataLog{}); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return db, nil
+	return db, func() {
+		if err := db.Migrator().DropTable(bmsdb.BeatorajaScoreDataLog{}); err != nil {
+			log.Printf("failed to clean up table: %s, tests could be wrong!", err)
+		}
+	}, nil
 }
 
-func createEmptySongDataDB() (*gorm.DB, error) {
+func createEmptySongDataDB() (*gorm.DB, func(), error) {
 	db, err := gorm.Open(sqlite.Open(MEMORY_DSN))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if err := db.AutoMigrate(bmsdb.BeatorajaSongData{}); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return db, nil
+	return db, func() {
+		if err := db.Migrator().DropTable(bmsdb.BeatorajaSongData{}); err != nil {
+			log.Printf("failed to clean up table: %s, tests could be wrong!", err)
+		}
+	}, nil
 }

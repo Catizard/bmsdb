@@ -7,7 +7,7 @@ type LR2Score struct {
 	Great      int    `gorm:"column:great"`
 	Good       int    `gorm:"column:good"`
 	Bad        int    `gorm:"column:bad"`
-	Poor       int    `gorm:"column:Poor"`
+	Poor       int    `gorm:"column:poor"`
 	TotalNotes int    `gorm:"column:totalnotes"`
 	MaxCombo   int    `gorm:"column:maxcombo"`
 	Minbp      int    `gorm:"column:minbp"`
@@ -51,7 +51,6 @@ type LR2Song struct {
 	Difficulty int32
 	MaxBpm     int32 `gorm:"column:maxbpm"`
 	MinBpm     int32 `gorm:"column:minbpm"`
-	Length     int32
 	Mode       int32
 	Judge      int32
 	LongNote   int   `gorm:"column:longnote"`
