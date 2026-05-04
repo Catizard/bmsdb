@@ -49,8 +49,6 @@ Example:
 │   │       └── scorelog.db
 │   ├── songdata.db
 │   ├── songinfo.db
-│   ├── songinfo.db-shm
-│   └── songinfo.db-wal
 └── LR2
     └── LR2files
         └── Database
