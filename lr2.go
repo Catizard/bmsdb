@@ -52,7 +52,7 @@ func NewLR2Scanner() *LR2Scanner {
 }
 
 func (scanner *LR2Scanner) ScanDirectory(dir string) (*LR2ScanResult, error) {
-	if err := validateLR2Installation(dir); err != nil {
+	if err := ValidateLR2Installation(dir); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +72,7 @@ func (scanner *LR2Scanner) ScanDirectory(dir string) (*LR2ScanResult, error) {
 	return ret, nil
 }
 
-func validateLR2Installation(dir string) error {
+func ValidateLR2Installation(dir string) error {
 	if err := isExistedDir(dir); err != nil {
 		return err
 	}

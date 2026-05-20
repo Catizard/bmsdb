@@ -114,7 +114,7 @@ func NewBeatorajaScanner() *BeatorajaScanner {
 }
 
 func (scanner *BeatorajaScanner) ScanDirectory(dir string) (*BeatorajaScanResult, error) {
-	if err := validateBeatorajaInstallation(dir); err != nil {
+	if err := ValidateBeatorajaInstallation(dir); err != nil {
 		return nil, eris.Wrap(err, "not a valid beatoraja installation")
 	}
 
@@ -131,7 +131,7 @@ func (scanner *BeatorajaScanner) ScanDirectory(dir string) (*BeatorajaScanResult
 	return ret, nil
 }
 
-func validateBeatorajaInstallation(dir string) error {
+func ValidateBeatorajaInstallation(dir string) error {
 	if err := isExistedDir(dir); err != nil {
 		return err
 	}
